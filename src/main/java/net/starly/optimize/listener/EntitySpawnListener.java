@@ -17,7 +17,8 @@ public class EntitySpawnListener implements Listener {
     @EventHandler
     public void onSpawn(EntitySpawnEvent event) {
         if (OptimizeMain.getInstance().getExceptWorlds().contains(event.getEntity().getWorld())) return;
-        if (!event.getEntityType().isAlive()) return;
+            if (!event.getEntityType().isAlive()) return;
+            if (event.getEntityType().equals(EntityType.ARMOR_STAND)) return;
 
         Chunk chunk = event.getEntity().getLocation().getChunk();
         if (event.getEntityType().equals(EntityType.VILLAGER)) {
