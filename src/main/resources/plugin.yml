@@ -1,9 +1,9 @@
-name: ST-BoilerPlate # TODO: 수정
-main: net.starly.boilerplate.BoilerPlateMain # TODO: 수정
+name: ST-Optimize # TODO: 수정
+main: net.starly.optimize.OptimizeMain # TODO: 수정
 author: Starly Team
 website: http://starly.kr/
 
-description: BoilerPlate Plugin. # TODO: 수정
+description: Optimize Plugin. # TODO: 수정
 
 softdepend:
   - ST-Core
@@ -11,4 +11,31 @@ softdepend:
 version: 1.0
 api-version: 1.13
 
+permissions:
+  starly.optimize.*:
+    description: wildcard permission
+    children:
+      - starly.optimize.reload
+      - starly.optimize.chunkunload
+      - starly.optimize.clean
+      - starly.optimize.jointoggle
+      - starly.optimize.bypass
+  starly.optimize.reload:
+    description: reload permission
+    default: op
+  starly.optimize.chunkunload:
+    description: chunkunload permission
+    default: op
+  starly.optimize.clean:
+    description: clean permission
+    default: op
+  starly.optimize.jointoggle:
+    description: join toggle permission
+    default: op
+  starly.optimize.bypass:
+    description: bypass permission
+    default: op
+
 commands:
+  최적화:
+    description: main command

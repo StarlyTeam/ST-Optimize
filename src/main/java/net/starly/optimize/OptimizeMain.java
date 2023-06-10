@@ -1,16 +1,31 @@
-package net.starly.boilerplate;
+package net.starly.optimize;
 
+import lombok.Getter;
 import net.starly.core.bstats.Metrics;
+import net.starly.optimize.command.OptimizeExecutor;
+import net.starly.optimize.context.MessageContent;
+import net.starly.optimize.context.MessageType;
+import net.starly.optimize.listener.EntityBreedListener;
+import net.starly.optimize.listener.PlayerJoinListener;
+import net.starly.optimize.listener.EntitySpawnListener;
+import net.starly.optimize.scheduler.AutoCleanScheduler;
+import net.starly.optimize.util.CleanUtil;
+import org.bukkit.World;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class BoilerPlateMain extends JavaPlugin {
+import java.util.ArrayList;
+import java.util.List;
 
-    private static BoilerPlateMain instance;
-    public static BoilerPlateMain getInstance() {
-        return instance;
-    }
+public class OptimizeMain extends JavaPlugin {
 
+    @Getter
+    private static OptimizeMain instance;
+
+    @Getter
+    private final List<World> exceptWorlds = new ArrayList<>();
+
+    private AutoCleanScheduler scheduler;
 
     @Override
     public void onEnable() {
@@ -23,22 +38,45 @@ public class BoilerPlateMain extends JavaPlugin {
             return;
         }
 
+        /* CONFIG
+         ──────────────────────────────────────────────────────────────────────────────────────────────────────────────── */
+        saveDefaultConfig();
+        MessageContent.getInstance().initialize(getConfig());
+
         /* SETUP
          ──────────────────────────────────────────────────────────────────────────────────────────────────────────────── */
         instance = this;
-        new Metrics(this, 12345); // TODO: 수정
+        new Metrics(this, 18705);
 
-        /* CONFIG
+        CleanUtil.init();
+
+        MessageContent.getInstance().getMessages(MessageType.CONFIG,"exceptWorld").forEach(string -> {
+            World world = getServer().getWorld(string);
+            if (world != null) {
+                exceptWorlds.add(world);
+            }
+        });
+
+        /* SCHEDULER
          ──────────────────────────────────────────────────────────────────────────────────────────────────────────────── */
-        // TODO: 수정
+        scheduler = new AutoCleanScheduler();
+        scheduler.start();
 
         /* COMMAND
          ──────────────────────────────────────────────────────────────────────────────────────────────────────────────── */
-        // TODO: 수정
+        getCommand("최적화").setExecutor(new OptimizeExecutor());
+        getCommand("최적화").setTabCompleter(new OptimizeExecutor());
 
         /* LISTENER
          ──────────────────────────────────────────────────────────────────────────────────────────────────────────────── */
-        // TODO: 수정
+        getServer().getPluginManager().registerEvents(new EntitySpawnListener(),this);
+        getServer().getPluginManager().registerEvents(new EntityBreedListener(),this);
+        getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
+    }
+
+    @Override
+    public void onDisable() {
+        if (scheduler != null) scheduler.cancel();
     }
 
     private boolean isPluginEnabled(String name) {

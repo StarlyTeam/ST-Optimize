@@ -2,7 +2,7 @@ plugins {
     id 'java'
 }
 
-group 'net.starly.boilerplate' // TODO: 수정
+group 'net.starly.optimize'
 version '1.0'
 
 repositories {
@@ -28,4 +28,8 @@ dependencies {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
+}
+
+jar {
+    destinationDirectory.set(file('C:\\Users\\mypc\\Pictures\\마크 서버\\starly\\plugins'))
 }
