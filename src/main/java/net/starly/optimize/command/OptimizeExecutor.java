@@ -48,6 +48,9 @@ public class OptimizeExecutor implements TabExecutor {
                     }
                 });
 
+                OptimizeMain.getInstance().getScheduler().cancel();
+                OptimizeMain.getInstance().getScheduler().start();
+
                 content.getMessageAfterPrefix(MessageType.NORMAL,"reloadCompleted").ifPresent(sender::sendMessage);
                 return true;
             }

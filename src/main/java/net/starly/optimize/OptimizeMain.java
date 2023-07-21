@@ -25,6 +25,7 @@ public class OptimizeMain extends JavaPlugin {
     @Getter
     private final List<World> exceptWorlds = new ArrayList<>();
 
+    @Getter
     private AutoCleanScheduler scheduler;
 
     @Override
